@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -63,27 +64,103 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="OmniWheels 0.1", group="OmniOp")
+@TeleOp(name="OmniWheels 0.2", group="OmniOp")
 @Disabled
 public class OmniWheels extends LinearOpMode {
 
-    // Declare OpMode members for each of the 4 motors.
+    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double MAX_POS     =  1.0;     // Maximum rotational position
+    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    
+    // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor rightBackDrive = null;
+    private DcMotor leftFrontWheel = null; //Motors to control all wheels
+    private DcMotor leftBackWheel = null;
+    private DcMotor rightFrontWheel = null;
+    private DcMotor rightBackWheel = null;
+    private DcMotor topArmBaseJoint = null; //Stronger joints for the arms
+    private DcMotor topArmMiddleJoint = null;
+    private DcMotor leftLinearActuator = null; //Linear Actuators to lift platform need to be strong, liekly will be slow
+    private DcMotor rightLinearActuator = null;
+    private Servo topHand = null; //Hands for the arms
+    private Servo bottomHand = null;
+    private Servo bottomArmBaseJoint = null; //One more joint, just its a servo
+    private double position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+    private boolean rotationDirection = true; //clockwise or counterclockwise
 
+    /* 
+    This is from a different sample file, just coppied it here to reference, the actions is the next thing to do.
+    
+   @Override
+    public void runOpMode() {
+
+        // Connect to servo (Assume Robot Left Hand)
+        // Change the text in quotes to match any servo name on your robot.
+        servo = hardwareMap.get(Servo.class, "left_hand");
+
+        // Wait for the start button
+        telemetry.addData(">", "Press Start to scan Servo." );
+        telemetry.update();
+        waitForStart();
+
+
+        // Scan servo till stop pressed.
+        while(opModeIsActive()){
+
+            // slew the servo, according to the rampUp (direction) variable.
+            if (rampUp) {
+                // Keep stepping up until we hit the max value.
+                position += INCREMENT ;
+                if (position >= MAX_POS ) {
+                    position = MAX_POS;
+                    rampUp = !rampUp;   // Switch ramp direction
+                }
+            }
+            else {
+                // Keep stepping down until we hit the min value.
+                position -= INCREMENT ;
+                if (position <= MIN_POS ) {
+                    position = MIN_POS;
+                    rampUp = !rampUp;  // Switch ramp direction
+                }
+            }
+
+            // Display the current value
+            telemetry.addData("Servo Position", "%5.2f", position);
+            telemetry.addData(">", "Press Stop to end test." );
+            telemetry.update();
+
+            // Set the servo to the new position and pause;
+            servo.setPosition(position);
+            sleep(CYCLE_MS);
+            idle();
+        }
+
+        // Signal done;
+        telemetry.addData(">", "Done");
+        telemetry.update();
+    }
+    */
+    
     @Override
     public void runOpMode() {
  
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-
+        leftFrontWheel  = hardwareMap.get(DcMotor.class, "left_front_drive");
+        leftBackWheel  = hardwareMap.get(DcMotor.class, "left_back_drive");
+        rightFrontWheel = hardwareMap.get(DcMotor.class, "right_front_drive");
+        rightBackWheel = hardwareMap.get(DcMotor.class, "right_back_drive");
+        topArmBaseJoint = hardwareMap.get(DcMotor.class, "top_arm_base_joint");
+        topArmMiddleJoint = hardwareMap.get(DcMotor.class, "top_arm_middle_joint");
+        leftLinearActuator = hardwareMap.get(DcMotor.class, "left_linear_actuator");
+        rightLinearActuator = hardwareMap.get(DcMotor.class, "right_linear_actuator");
+        topHand = hardwareMap.get(Servo.class, "top_hand");
+        bottomHand = hardwareMap.get(Servo.class, "bottom_hand");
+        bottomArmBaseJoint = hardwareMap.get(Servo.class, "bottom_arm_base_joint");
+        
+        
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
         // ########################################################################################
@@ -94,10 +171,10 @@ public class OmniWheels extends LinearOpMode {
         // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
         // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
         // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontWheel.setDirection(DcMotor.Direction.REVERSE);
+        leftBackWheel.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontWheel.setDirection(DcMotor.Direction.FORWARD);
+        rightBackWheel.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("High Five", "We Roboted! Woohoo!!!");
@@ -153,10 +230,10 @@ public class OmniWheels extends LinearOpMode {
             */
 
             // Send calculated power to wheels
-            leftFrontDrive.setPower(leftFrontPower);
-            rightFrontDrive.setPower(rightFrontPower);
-            leftBackDrive.setPower(leftBackPower);
-            rightBackDrive.setPower(rightBackPower);
+            leftFrontWheel.setPower(leftFrontPower);
+            rightFrontWheel.setPower(rightFrontPower);
+            leftBackWheel.setPower(leftBackPower);
+            rightBackWheel.setPower(rightBackPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
