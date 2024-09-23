@@ -75,73 +75,26 @@ public class OmniWheels extends LinearOpMode {
     
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    
     private DcMotor leftFrontWheel = null; //Motors to control all wheels
     private DcMotor leftBackWheel = null;
     private DcMotor rightFrontWheel = null;
     private DcMotor rightBackWheel = null;
+    
     private DcMotor topArmBaseJoint = null; //Stronger joints for the arms
     private DcMotor topArmMiddleJoint = null;
+    
     private DcMotor leftLinearActuator = null; //Linear Actuators to lift platform need to be strong, liekly will be slow
     private DcMotor rightLinearActuator = null;
+    
     private Servo topHand = null; //Hands for the arms
     private Servo bottomHand = null;
+    
     private Servo bottomArmBaseJoint = null; //One more joint, just its a servo
+
     private double position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
     private boolean rotationDirection = true; //clockwise or counterclockwise
 
-    /* 
-    This is from a different sample file, just coppied it here to reference, the actions is the next thing to do.
-    
-   @Override
-    public void runOpMode() {
-
-        // Connect to servo (Assume Robot Left Hand)
-        // Change the text in quotes to match any servo name on your robot.
-        servo = hardwareMap.get(Servo.class, "left_hand");
-
-        // Wait for the start button
-        telemetry.addData(">", "Press Start to scan Servo." );
-        telemetry.update();
-        waitForStart();
-
-
-        // Scan servo till stop pressed.
-        while(opModeIsActive()){
-
-            // slew the servo, according to the rampUp (direction) variable.
-            if (rampUp) {
-                // Keep stepping up until we hit the max value.
-                position += INCREMENT ;
-                if (position >= MAX_POS ) {
-                    position = MAX_POS;
-                    rampUp = !rampUp;   // Switch ramp direction
-                }
-            }
-            else {
-                // Keep stepping down until we hit the min value.
-                position -= INCREMENT ;
-                if (position <= MIN_POS ) {
-                    position = MIN_POS;
-                    rampUp = !rampUp;  // Switch ramp direction
-                }
-            }
-
-            // Display the current value
-            telemetry.addData("Servo Position", "%5.2f", position);
-            telemetry.addData(">", "Press Stop to end test." );
-            telemetry.update();
-
-            // Set the servo to the new position and pause;
-            servo.setPosition(position);
-            sleep(CYCLE_MS);
-            idle();
-        }
-
-        // Signal done;
-        telemetry.addData(">", "Done");
-        telemetry.update();
-    }
-    */
     
     @Override
     public void runOpMode() {
@@ -152,14 +105,17 @@ public class OmniWheels extends LinearOpMode {
         leftBackWheel  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontWheel = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackWheel = hardwareMap.get(DcMotor.class, "right_back_drive");
+        
         topArmBaseJoint = hardwareMap.get(DcMotor.class, "top_arm_base_joint");
         topArmMiddleJoint = hardwareMap.get(DcMotor.class, "top_arm_middle_joint");
+        
         leftLinearActuator = hardwareMap.get(DcMotor.class, "left_linear_actuator");
         rightLinearActuator = hardwareMap.get(DcMotor.class, "right_linear_actuator");
+        
         topHand = hardwareMap.get(Servo.class, "top_hand");
         bottomHand = hardwareMap.get(Servo.class, "bottom_hand");
-        bottomArmBaseJoint = hardwareMap.get(Servo.class, "bottom_arm_base_joint");
         
+        bottomArmBaseJoint = hardwareMap.get(Servo.class, "bottom_arm_base_joint");
         
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -175,6 +131,13 @@ public class OmniWheels extends LinearOpMode {
         leftBackWheel.setDirection(DcMotor.Direction.REVERSE);
         rightFrontWheel.setDirection(DcMotor.Direction.FORWARD);
         rightBackWheel.setDirection(DcMotor.Direction.FORWARD);
+        
+        topArmBaseJoint.setDirection(DcMotor.Direction.FORWARD);
+        topArmMiddleJoint.setDirection(DcMotor.Direction.FORWARD);
+        rightLinearActuator.setDirection(DcMotor.Direction.FORWARD);
+        rightLinearActuator.setDirection(DcMotor.Direction.FORWARD);
+
+        
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("High Five", "We Roboted! Woohoo!!!");
@@ -192,6 +155,10 @@ public class OmniWheels extends LinearOpMode {
             double lateral =  gamepad1.right_stick_x;  // Strafe - Left and Right
             double yaw     =  gamepad1.left_stick_x;  // Rotation - ClockWise and CounterClockWise
 
+            // y and x buttons for up and down on the linear actuator
+            double upLinearActuator = gamepad1.y;
+            double downLinearActuator = gamepad1.x;
+            
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
             double leftFrontPower  = axial + lateral + yaw;
@@ -240,5 +207,63 @@ public class OmniWheels extends LinearOpMode {
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.update();
+
+            // Move the Servos to 0
+            topHand.setPosition(0.0); // change later to actually do something
+            bottomHand.setPosition(0.0); // change later to actually do something
+            bottomArmBaseJoint.setPosition(0.0); // change later to actually do something
+            /* 
+            This is from a different sample file, just coppied it here to reference, the actions is the next thing to do.
+            
+            @Override
+            public void runOpMode() {
+        
+                // Connect to servo (Assume Robot Left Hand)
+                // Change the text in quotes to match any servo name on your robot.
+                servo = hardwareMap.get(Servo.class, "left_hand");
+        
+                // Wait for the start button
+                telemetry.addData(">", "Press Start to scan Servo." );
+                telemetry.update();
+                waitForStart();
+        
+        
+                // Scan servo till stop pressed.
+                while(opModeIsActive()){
+        
+                    // slew the servo, according to the rampUp (direction) variable.
+                    if (rampUp) {
+                        // Keep stepping up until we hit the max value.
+                        position += INCREMENT ;
+                        if (position >= MAX_POS ) {
+                            position = MAX_POS;
+                            rampUp = !rampUp;   // Switch ramp direction
+                        }
+                    }
+                    else {
+                        // Keep stepping down until we hit the min value.
+                        position -= INCREMENT ;
+                        if (position <= MIN_POS ) {
+                            position = MIN_POS;
+                            rampUp = !rampUp;  // Switch ramp direction
+                        }
+                    }
+        
+                    // Display the current value
+                    telemetry.addData("Servo Position", "%5.2f", position);
+                    telemetry.addData(">", "Press Stop to end test." );
+                    telemetry.update();
+        
+                    // Set the servo to the new position and pause;
+                    servo.setPosition(position);
+                    sleep(CYCLE_MS);
+                    idle();
+                }
+        
+                // Signal done;
+                telemetry.addData(">", "Done");
+                telemetry.update();
+            }
+            */
         }
     }}
