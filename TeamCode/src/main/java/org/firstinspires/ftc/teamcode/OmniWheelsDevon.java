@@ -67,11 +67,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name="OmniWheels 0.2", group="OmniOp")
 @Disabled
 public class OmniWheels extends LinearOpMode {
-
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
     
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -148,16 +143,42 @@ public class OmniWheels extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            
             double max;
+            static final double INCREMENT     = 0.01;   // amount to slew servo each CYCLE_MS cycle
+            static final int    CYCLE_MS      = 50;     // period of each cycle
+            static final double MAX_POS       = 1.0;    // Maximum rotational position
+            static final double MIN_POS       = 0.0;    // Minimum rotational position
+            static final double BOTTOM_BASE_0 = 0.0;    // Furthest back the bottom arm base needs to go
+            static final double ALL_HANDS_0   = 0.0;    // Close position for both hands 
 
+            
+            
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value - Forward and Backward
-            double lateral =  gamepad1.right_stick_x;  // Strafe - Left and Right
-            double yaw     =  gamepad1.left_stick_x;  // Rotation - ClockWise and CounterClockWise
+            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value - Forward and Backward -------------
+            double lateral =  gamepad1.right_stick_x;  // Strafe - Left and Right --------------
+            double yaw     =  gamepad1.left_stick_x;  // Rotation - ClockWise and CounterClockWise ------------
 
-            // y and x buttons for up and down on the linear actuator
-            double upLinearActuator = gamepad1.y;
-            double downLinearActuator = gamepad1.x;
+            // On both controllers
+            boolean pos0GP1      = gamepad1.b; // Set all robot to wanted 0 position if not initally in wanted spot -----------
+            boolean topArmUpGP1   = gamepad1.left_bumper; // Move linear actuators to go up -----------------
+            boolean topArmDownGP1 = gamepad1.right_bumper; // Move linear actuators to go down -------------------
+            
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            // boolean grab = gamepad2.left_stick_x;
+            boolean topArmPresetGrab       = gamepad2.y; // Grab sample from bottom arm
+            boolean topArmPresetRelease    = gamepad2.a; // Put top arm in wanted spot to let go and let go
+            boolean bottomArmPresetGrab    = gamepad2.dpad_down; // go out and grab sample
+            boolean bottomArmPresetRelease = gamepad2.dpad_up; // go in and get in spot for top arm to grab sample
+            double topArmMove              = gamepad2.left_stick_y; // Moves the entire top arm forward or backwards
+            
+            // On both controllers
+            boolean pos0GP2      = gamepad2.b; // Set all robot to wanted 0 position if not initally in wanted spot ----------
+            boolean topArmUpGP2   = gamepad2.left_bumper; // Move linear actuators to go up -----------
+            boolean topArmDownGP2 = gamepad2.right_bumper; // Move linear actuators to go down ----------
+
+
             
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -179,6 +200,30 @@ public class OmniWheels extends LinearOpMode {
                 rightBackPower  /= max;
             }
 
+            if (pos0GP1 == true || pos0GP2 == true) {
+                topHand.setPosition(ALL_HANDS_0);
+                bottomHand.setPosition(ALL_HANDS_0);
+                bottomArmBaseJoint.setPosition(BOTTOM_BASE_0);
+            }
+
+            if (topArmUpGP1 == true || topArmUpGP2 == true) {
+                // Set the motor position, not measuring time
+            } else if (topArmDownGP1 == true || topArmDownGP2 == true) {
+                // Set the motor position, not measuring time
+            }
+
+            // TO DO -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // top arm grab preset
+            // top arm release preset
+            // bottom arm grab preset
+            // bottom arm release preset
+            // move top arm manually double
+
+            if (___ == true) {
+                motorName.setTargetPosition(5*1440); // 5 is the rotations, 1440 is what the motor reads per 1 rotation
+                // still needs to save to be the correct motors and also define the motors to have encoders
+            }
+            
             // This is test code:
             //
             // Uncomment the following code to test your motor directions.
