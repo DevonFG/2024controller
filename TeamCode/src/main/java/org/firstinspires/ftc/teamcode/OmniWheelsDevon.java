@@ -194,8 +194,8 @@ public class OmniWheels extends LinearOpMode {
             boolean bottomArmPresetRelease = gamepad2.dpad_up; // go in and get in spot for top arm to grab sample
 
             double topArmBase       = gamepad2.left_stick_y;      // Move the Base Joint Forward/Backward
-            double topArmMiddle     = -gamepad2.left_stick_y;     // Move the Middle Joint Forward/Backward
-            double topArmPower      = topArmBase - topArmMiddle;  // 
+            double topArmMiddle     = gamepad2.left_stick_y;     // Move the Middle Joint Forward/Backward
+            double topArmPower      = topArmBase - topArmMiddle;
             
             // On both controllers
             boolean pos0GP2      = gamepad2.b; // Set all robot to wanted 0 position if not initally in wanted spot ----------
@@ -242,14 +242,16 @@ public class OmniWheels extends LinearOpMode {
             } else if (linearDownGP1 == true || linearDownGP2 == true) {
                 // Set the motor position, not measuring time
             }
-
-            if (_ == true) {
-                // Set Top Arm Grab Preset stuff
-            } else if (_ == true) {
+// =================================================== Anything with the Variable Rotation Number NEEDS TO BE CHANGED ===================================================================
+            if (topArmPresetGrab) {
+                topArmBaseJoint.setTargetPosition(RotationNumber * 1440);
+                topArmMiddleJoint.setTargetPosition(RotationNumber * 1440);
+                topHand.setPosition(CLOSE_TOPHAND); // Need to define OPEN_TOPHAND and CLOSE_TOPHAND
+            } else if (topArmPresetRelease) {
                 // Set Top Arm Release Preset Stuff
-            } else if (_ == true) {
+            } else if (bottomArmPresetGrab) {
                 // Set Bottom Arm Grab Preset Stuff
-            } else if (_ == true) {
+            } else if (bottomArmPresetRelease) {
                 // Set Bottom Arm Release Preset Stuff
             }
 
