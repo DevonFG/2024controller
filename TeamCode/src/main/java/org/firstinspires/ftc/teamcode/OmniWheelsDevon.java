@@ -167,13 +167,13 @@ public class OmniWheels extends LinearOpMode {
             
             double max;
             double armMax;
-            static final double INCREMENT     = 0.01;   // amount to slew servo each CYCLE_MS cycle
-            static final int    CYCLE_MS      = 50;     // period of each cycle
-            static final double MAX_POS       = 1.0;    // Maximum rotational position
-            static final double MIN_POS       = 0.0;    // Minimum rotational position
-            static final double BOTTOM_BASE_0 = 0.0;    // Furthest back the bottom arm base needs to go
-            static final double ALL_HANDS_0   = 0.0;    // Close position for both hands 
-            static final double MOVE_SPEED    = 1.0;    // The speed for the top arm motors to move
+            final double INCREMENT     = 0.01;   // amount to slew servo each CYCLE_MS cycle
+            final int    CYCLE_MS      = 50;     // period of each cycle
+            final double MAX_POS       = 1.0;    // Maximum rotational position
+            final double MIN_POS       = 0.0;    // Minimum rotational position
+            final double BOTTOM_BASE_0 = 0.0;    // Furthest back the bottom arm base needs to go
+            final double ALL_HANDS_0   = 0.0;    // Close position for both hands 
+            final double MOVE_SPEED    = 1.0;    // The speed for the top arm motors to move
             
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value - Forward and Backward -------------
