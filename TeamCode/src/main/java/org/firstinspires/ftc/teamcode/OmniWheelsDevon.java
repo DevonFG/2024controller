@@ -255,18 +255,13 @@ public class OmniWheels extends LinearOpMode {
 
             // MAKE MANUAL CONTROLS FOR TOP ARM HERE =====================================================================================================================================
             if (_Up) {
-                _.setPower(MOVE_SPEED);
+                motorName.setTargetPosition(RotationNumber * 1440);
             } else if (_Down) {
                 _.setPower(-MOVE_SPEED);
             }
             
-            /*
-                    if (___ == true) {
-                        motorName.setTargetPosition(5*1440); // 5 is the rotations, 1440 is what the motor reads per 1 rotation
-                        // still needs to save to be the correct motors and also define the motors to have encoders
-                    }
-            */
-            
+
+
             
             // This is test code:
             //
