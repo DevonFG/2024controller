@@ -182,6 +182,8 @@ public class OmniWheels extends LinearOpMode {
             
             double max;
             double armMax;
+            double handX;
+            double handY;
             final double INCREMENT     = 0.01;   // amount to slew servo each CYCLE_MS cycle
             final int    CYCLE_MS      = 50;     // period of each cycle
             final double MAX_POS       = 1.0;    // Maximum rotational position
@@ -191,7 +193,7 @@ public class OmniWheels extends LinearOpMode {
             final double TOP_BASE_0    = 0.0;    // Furthest back the top arm base needs to go
             final double TOP_MIDDLE_0  = 0.0;    // Furthest back the top arm middle needs to go
             final double ALL_HANDS_0   = 0.0;    // Close position for both hands 
-            final doubale OPEN_TOPHAND = 1.0;    // Open the top hand fully
+            final double OPEN_TOPHAND = 1.0;    // Open the top hand fully
             final double CLOSE_TOPHAND = 0.5;    // Close the top hand fully
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,8 +216,7 @@ public class OmniWheels extends LinearOpMode {
             boolean bottomArmPresetGrab    = gamepad2.dpad_down; // go out and grab sample
             boolean bottomArmPresetRelease = gamepad2.dpad_up; // go in and get in spot for top arm to grab sample
 
-            double topArmBase       = gamepad2.left_stick_y;      // Move the Base Joint Forward/Backward
-            double topArmMiddle     = gamepad2.left_stick_y;     // Move the Middle Joint Forward/Backward
+            double bothArmSpeed       = gamepad2.left_stick_y;      // Move the Base Joint Forward/Backward
             double topArmPower      = topArmBase - topArmMiddle;
             
             // On both controllers
@@ -293,13 +294,15 @@ public class OmniWheels extends LinearOpMode {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             // MAKE MANUAL CONTROLS FOR TOP ARM HERE =====================================================================================================================================
-            if (_Up) { // Still need to define the power var
-                topArmBaseJoint.setTargetPosition(-1 * 1440); // change 1 to be the correct number
-                topArmMiddleJoint.setTargetPosition(-1 * 1440); // change 1 to be the correct number
-            } else if (_Down) { // Still need to define the power var
-                topArmBaseJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
-                topArmMiddleJoint.setPosition(.5 * 1440); // change 1 to be the correct number
-            }
+            // if (gamepad2.left_shoulder) { 
+            //     topArmBaseJoint.setTargetPosition(-1 * 1440); // change 1 to be the correct number
+            //     topArmMiddleJoint.setTargetPosition(-1 * 1440); // change 1 to be the correct number
+            // } else if (gamepad2.right_shoulder) { 
+            //     topArmBaseJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+            //     topArmMiddleJoint.setPosition(.5 * 1440); // change 1 to be the correct number
+            // }
+            topArmBaseJoint.setPower(bothArmSpeed);
+            topArmMiddleJoint.setPower(-bothArmSpeed);
             
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
