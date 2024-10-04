@@ -26,6 +26,7 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
@@ -38,6 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.List;
 import java.util.ArrayList;
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
  * This file contains an example of a Linear "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -65,6 +67,10 @@ import java.util.ArrayList;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 @TeleOp(name="OmniWheels 0.2", group="OmniOp")
 @Disabled
@@ -95,6 +101,7 @@ public class OmniWheels extends LinearOpMode {
     List<DcMotor> allMotors = new ArrayList<>();
     List<Servo>   allServos = new ArrayList<>();
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     @Override
     public void runOpMode() {
@@ -129,6 +136,10 @@ public class OmniWheels extends LinearOpMode {
         allServos.add(topHand);
         allServos.add(bottomHand);
         allServos.add(bottomBaseJoint);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -150,8 +161,10 @@ public class OmniWheels extends LinearOpMode {
         leftLinearActuator.setDirection(DcMotor.Direction.FORWARD);
         rightLinearActuator.setDirection(DcMotor.Direction.FORWARD);
 
-        
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        
         // Wait for the game to start (driver presses START)
         telemetry.addData("High Five", "We Roboted! Woohoo!!!");
         telemetry.update();
@@ -159,6 +172,8 @@ public class OmniWheels extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Axial", axial();
@@ -171,19 +186,25 @@ public class OmniWheels extends LinearOpMode {
             final int    CYCLE_MS      = 50;     // period of each cycle
             final double MAX_POS       = 1.0;    // Maximum rotational position
             final double MIN_POS       = 0.0;    // Minimum rotational position
+            // All variable numbers from here is guestimations, needs to be actually tested ==============================================================================
             final double BOTTOM_BASE_0 = 0.0;    // Furthest back the bottom arm base needs to go
+            final double TOP_BASE_0    = 0.0;    // Furthest back the top arm base needs to go
+            final double TOP_MIDDLE_0  = 0.0;    // Furthest back the top arm middle needs to go
             final double ALL_HANDS_0   = 0.0;    // Close position for both hands 
-            final double MOVE_SPEED    = 1.0;    // The speed for the top arm motors to move
+            final doubale OPEN_TOPHAND = 1.0;    // Open the top hand fully
+            final double CLOSE_TOPHAND = 0.5;    // Close the top hand fully
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value - Forward and Backward -------------
-            double lateral =  gamepad1.right_stick_x;  // Strafe - Left and Right --------------
-            double yaw     =  gamepad1.left_stick_x;  // Rotation - ClockWise and CounterClockWise ------------
+            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value - Forward and Backward 
+            double lateral =  gamepad1.right_stick_x;  // Strafe - Left and Right 
+            double yaw     =  gamepad1.left_stick_x;  // Rotation - ClockWise and CounterClockWise 
             
             // On both controllers
-            boolean pos0GP1      = gamepad1.b; // Set all robot to wanted 0 position if not initally in wanted spot -----------
-            boolean linearUpGP1   = gamepad1.left_bumper; // Move linear actuators to go up -----------------
-            boolean linearDownGP1 = gamepad1.right_bumper; // Move linear actuators to go down -------------------
+            boolean pos0GP1      = gamepad1.b; // Set all robot to wanted 0 position if not initally in wanted spot 
+            boolean linearUpGP1   = gamepad1.left_bumper; // Move linear actuators to go up 
+            boolean linearDownGP1 = gamepad1.right_bumper; // Move linear actuators to go down 
             
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
@@ -198,18 +219,20 @@ public class OmniWheels extends LinearOpMode {
             double topArmPower      = topArmBase - topArmMiddle;
             
             // On both controllers
-            boolean pos0GP2      = gamepad2.b; // Set all robot to wanted 0 position if not initally in wanted spot ----------
-            boolean linearUpGP2   = gamepad2.left_bumper; // Move linear actuators to go up -----------
-            boolean linearDownGP2 = gamepad2.right_bumper; // Move linear actuators to go down ----------
+            boolean pos0GP2      = gamepad2.b; // Set all robot to wanted 0 position if not initally in wanted spot 
+            boolean linearUpGP2   = gamepad2.left_bumper; // Move linear actuators to go up 
+            boolean linearDownGP2 = gamepad2.right_bumper; // Move linear actuators to go down 
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = axial + lateral + yaw;
-            double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower   = axial - lateral + yaw;
-            double rightBackPower  = axial + lateral - yaw;
+            // Acting as forward, turn right, and strafe right, is positive, will likely need to change.
+            // Both Left wheels are reversed
+            double leftFrontPower  = -axial - lateral - yaw;
+            double rightFrontPower = -axial - lateral + yaw;
+            double leftBackPower   = -axial + lateral - yaw;
+            double rightBackPower  = -axial + lateral + yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -217,7 +240,7 @@ public class OmniWheels extends LinearOpMode {
             max = Math.max(max, Math.abs(leftBackPower));
             max = Math.max(max, Math.abs(rightBackPower));
             
-            armMax = Math.max(Math.abs(topArmPower);
+            armMax = Math.max(Math.abs(topArmPower));
 
             
             if (max > 1.0) {
@@ -230,6 +253,8 @@ public class OmniWheels extends LinearOpMode {
             if (armMax > 1.0) {
                 topArmPower /= armMax;
             }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             if (pos0GP1 == true || pos0GP2 == true) {
                 topHand.setPosition(ALL_HANDS_0);
@@ -237,33 +262,46 @@ public class OmniWheels extends LinearOpMode {
                 bottomArmBaseJoint.setPosition(BOTTOM_BASE_0);
             }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             if (linearUpGP1 == true || linearUpGP2 == true) {
                 // Set the motor position, not measuring time
             } else if (linearDownGP1 == true || linearDownGP2 == true) {
                 // Set the motor position, not measuring time
             }
-// =================================================== Anything with the Variable Rotation Number NEEDS TO BE CHANGED ===================================================================
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             if (topArmPresetGrab) {
-                topArmBaseJoint.setTargetPosition(RotationNumber * 1440);
-                topArmMiddleJoint.setTargetPosition(RotationNumber * 1440);
-                topHand.setPosition(CLOSE_TOPHAND); // Need to define OPEN_TOPHAND and CLOSE_TOPHAND
+                topArmBaseJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+                topArmMiddleJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+                topHand.setPosition(CLOSE_TOPHAND); // Close the top hand on sample
             } else if (topArmPresetRelease) {
-                // Set Top Arm Release Preset Stuff
+                topArmBaseJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+                topArmMiddleJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+                topHand.setPosition(OPEN_TOPHAND);
             } else if (bottomArmPresetGrab) {
-                // Set Bottom Arm Grab Preset Stuff
+                bottomArmBaseJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+                bottomArmMiddleJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+                bottomHand.setPosition(CLOSE_TOPHAND);
             } else if (bottomArmPresetRelease) {
-                // Set Bottom Arm Release Preset Stuff
+                bottomArmBaseJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+                bottomArmMiddleJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+                bottomHand.setPosition(OPEN_TOPHAND);
             }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // MAKE MANUAL CONTROLS FOR TOP ARM HERE =====================================================================================================================================
-            if (_Up) {
-                motorName.setTargetPosition(RotationNumber * 1440);
-            } else if (_Down) {
-                _.setPower(-MOVE_SPEED);
+            if (_Up) { // Still need to define the power var
+                topArmBaseJoint.setTargetPosition(-1 * 1440); // change 1 to be the correct number
+                topArmMiddleJoint.setTargetPosition(-1 * 1440); // change 1 to be the correct number
+            } else if (_Down) { // Still need to define the power var
+                topArmBaseJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
+                topArmMiddleJoint.setPosition(.5 * 1440); // change 1 to be the correct number
             }
             
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             // This is test code:
             //
@@ -288,6 +326,8 @@ public class OmniWheels extends LinearOpMode {
             leftBackWheel.setPower(leftBackPower);
             rightBackWheel.setPower(rightBackPower);
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
             // Show the elapsed game time and wheel power.
             // telemetry.addData("Status", "Run Time: " + runtime.toString());
             // telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
@@ -299,63 +339,5 @@ public class OmniWheels extends LinearOpMode {
                 telemetry.addData("ServoPosition", thisServo.getPosition());
             }
             telemetry.update();
-
-            // Move the Servos to 0
-            topHand.setPosition(0.0); // change later to actually do something
-            bottomHand.setPosition(0.0); // change later to actually do something
-            bottomArmBaseJoint.setPosition(0.0); // change later to actually do something
-            /* 
-            This is from a different sample file, just coppied it here to reference, the actions is the next thing to do.
-            
-            @Override
-            public void runOpMode() {
-        
-                // Connect to servo (Assume Robot Left Hand)
-                // Change the text in quotes to match any servo name on your robot.
-                servo = hardwareMap.get(Servo.class, "left_hand");
-        
-                // Wait for the start button
-                telemetry.addData(">", "Press Start to scan Servo." );
-                telemetry.update();
-                waitForStart();
-        
-        
-                // Scan servo till stop pressed.
-                while(opModeIsActive()){
-        
-                    // slew the servo, according to the rampUp (direction) variable.
-                    if (rampUp) {
-                        // Keep stepping up until we hit the max value.
-                        position += INCREMENT ;
-                        if (position >= MAX_POS ) {
-                            position = MAX_POS;
-                            rampUp = !rampUp;   // Switch ramp direction
-                        }
-                    }
-                    else {
-                        // Keep stepping down until we hit the min value.
-                        position -= INCREMENT ;
-                        if (position <= MIN_POS ) {
-                            position = MIN_POS;
-                            rampUp = !rampUp;  // Switch ramp direction
-                        }
-                    }
-        
-                    // Display the current value
-                    telemetry.addData("Servo Position", "%5.2f", position);
-                    telemetry.addData(">", "Press Stop to end test." );
-                    telemetry.update();
-        
-                    // Set the servo to the new position and pause;
-                    servo.setPosition(position);
-                    sleep(CYCLE_MS);
-                    idle();
-                }
-        
-                // Signal done;
-                telemetry.addData(">", "Done");
-                telemetry.update();
-            }
-            */
         }
     }}
