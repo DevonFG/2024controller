@@ -176,9 +176,9 @@ public class OmniWheels extends LinearOpMode {
         
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Axial", axial();
-            telemetry.addData("Lateral", lateral();
-            telemetry.addData("Yam", yam();
+            telemetry.addData("Axial", axial());
+            telemetry.addData("Lateral", lateral());
+            telemetry.addData("Yaw", yaw());
             
             double max;
             double armMax;
@@ -335,10 +335,10 @@ public class OmniWheels extends LinearOpMode {
             // telemetry.addData("Status", "Run Time: " + runtime.toString());
             // telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             // telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-            for (DcMotor thisMotor in allMotors) {
+            for (DcMotor thisMotor: allMotors) {
                 telemetry.addData("MotorSpeed", thisMotor.getSpeed());
             }
-            for (Servo thisServo in allServos) {
+            for (Servo thisServo: allServos) {
                 telemetry.addData("ServoPosition", thisServo.getPosition());
             }
             telemetry.update();
