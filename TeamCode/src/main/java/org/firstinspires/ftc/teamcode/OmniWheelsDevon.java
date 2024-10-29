@@ -176,9 +176,6 @@ public class OmniWheels extends LinearOpMode {
         
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Axial", axial());
-            telemetry.addData("Lateral", lateral());
-            telemetry.addData("Yaw", yaw());
             
             double max;
             double armMax;
@@ -189,12 +186,19 @@ public class OmniWheels extends LinearOpMode {
             final double MAX_POS       = 1.0;    // Maximum rotational position
             final double MIN_POS       = 0.0;    // Minimum rotational position
             // All variable numbers from here is guestimations, needs to be actually tested ==============================================================================
+            /* 
             final double BOTTOM_BASE_0 = 0.0;    // Furthest back the bottom arm base needs to go
             final double TOP_BASE_0    = 0.0;    // Furthest back the top arm base needs to go
             final double TOP_MIDDLE_0  = 0.0;    // Furthest back the top arm middle needs to go
             final double ALL_HANDS_0   = 0.0;    // Close position for both hands 
+            */ 
+            // Not doing set pos 0
+
+            //3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
             final double OPEN_TOPHAND = 1.0;    // Open the top hand fully
             final double CLOSE_TOPHAND = 0.5;    // Close the top hand fully
+            final double OPEN_BOTTOMHAND = 1.0; 
+            final double CLOSE_BOTTOMHAND = 0.0;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
@@ -204,23 +208,35 @@ public class OmniWheels extends LinearOpMode {
             double yaw     =  gamepad1.left_stick_x;  // Rotation - ClockWise and CounterClockWise 
             
             // On both controllers
-            boolean pos0GP1      = gamepad1.b; // Set all robot to wanted 0 position if not initally in wanted spot 
+            // Not doing pos 0
+          //boolean pos0GP1      = gamepad1.b; // Set all robot to wanted 0 position if not initally in wanted spot 
+            //3333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333
             boolean linearUpGP1   = gamepad1.left_bumper; // Move linear actuators to go up 
             boolean linearDownGP1 = gamepad1.right_bumper; // Move linear actuators to go down 
             
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             // boolean grab = gamepad2.left_stick_x;
+            /*
+            // DECIDED TO NOT DO PRESET'S SINCE WE ARENT GETTING MEASUREMENTS
             boolean topArmPresetGrab       = gamepad2.y; // Grab sample from bottom arm
             boolean topArmPresetRelease    = gamepad2.a; // Put top arm in wanted spot to let go and let go
             boolean bottomArmPresetGrab    = gamepad2.dpad_down; // go out and grab sample
             boolean bottomArmPresetRelease = gamepad2.dpad_up; // go in and get in spot for top arm to grab sample
+            */
 
+            double topHandOpen     = gamepad2.y;
+            double topHandClose    = gamepad2.x;
+            double bottomHandOpen  = gamepad2.b;
+            double bottomHandClose = gamepad2.a;
+            
+            
             double bothArmSpeed       = gamepad2.left_stick_y;      // Move the Base Joint Forward/Backward
             double topArmPower      = topArmBase - topArmMiddle;
             
             // On both controllers
-            boolean pos0GP2      = gamepad2.b; // Set all robot to wanted 0 position if not initally in wanted spot 
+            // Not doing pos 0
+          //boolean pos0GP2      = gamepad2.b; // Set all robot to wanted 0 position if not initally in wanted spot 
             boolean linearUpGP2   = gamepad2.left_bumper; // Move linear actuators to go up 
             boolean linearDownGP2 = gamepad2.right_bumper; // Move linear actuators to go down 
 
@@ -230,10 +246,10 @@ public class OmniWheels extends LinearOpMode {
             // Set up a variable for each drive wheel to save the power level for telemetry.
             // Acting as forward, turn right, and strafe right, is positive, will likely need to change.
             // Both Left wheels are reversed
-            double leftFrontPower  = -axial - lateral - yaw;
-            double rightFrontPower = -axial - lateral + yaw;
-            double leftBackPower   = -axial + lateral - yaw;
-            double rightBackPower  = -axial + lateral + yaw;
+            double leftFrontPower  = axial + lateral + yaw;
+            double rightFrontPower = axial + lateral - yaw;
+            double leftBackPower   = axial - lateral + yaw;
+            double rightBackPower  = axial - lateral - yaw;
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -256,23 +272,24 @@ public class OmniWheels extends LinearOpMode {
             }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+            /*
             if (pos0GP1 == true || pos0GP2 == true) {
                 topHand.setPosition(ALL_HANDS_0);
                 bottomHand.setPosition(ALL_HANDS_0);
                 bottomArmBaseJoint.setPosition(BOTTOM_BASE_0);
             }
-
+            */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             if (linearUpGP1 == true || linearUpGP2 == true) {
-                // Set the motor position, not measuring time
+                leftLinearActuator.setPower(1.0);
+                rightLinearActuator.setPower(1.0);
             } else if (linearDownGP1 == true || linearDownGP2 == true) {
-                // Set the motor position, not measuring time
+                leftLinearActuator.setPower(-1.0);
+                rightLinearActuator.setPower(-1.0);
             }
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            
+        /*
+            NOT DOING TARGET POSITION
             if (topArmPresetGrab) {
                 topArmBaseJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
                 topArmMiddleJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
@@ -290,8 +307,22 @@ public class OmniWheels extends LinearOpMode {
                 bottomArmMiddleJoint.setTargetPosition(1 * 1440); // change 1 to be the correct number
                 bottomHand.setPosition(OPEN_TOPHAND);
             }
+       */
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            // Open/Close hands if specific button is pushed
+            if (____) {
+                topHand.setPosition(OPEN_TOPHAND);
+            } else if (___) {
+                topHand.setPosition(CLOSE_TOPHAND);
+            }
+            if (___) {
+                bottomHand.setPosition(OPEN_BOTTOMHAND);
+            } else if (___) {
+                bottomHand.setPosition(CLOSE_BOTTOMHAND);
+            }
+
+
+            
             
             // MAKE MANUAL CONTROLS FOR TOP ARM HERE =====================================================================================================================================
             // if (gamepad2.left_shoulder) { 
