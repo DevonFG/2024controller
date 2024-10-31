@@ -310,14 +310,14 @@ public class OmniWheels extends LinearOpMode {
        */
 
             // Open/Close hands if specific button is pushed
-            if (____) {
+            if (topHandOpen) {
                 topHand.setPosition(OPEN_TOPHAND);
-            } else if (___) {
+            } else if (topHandClose) {
                 topHand.setPosition(CLOSE_TOPHAND);
             }
-            if (___) {
+            if (bottomHandOpen) {
                 bottomHand.setPosition(OPEN_BOTTOMHAND);
-            } else if (___) {
+            } else if (bottomHandClose) {
                 bottomHand.setPosition(CLOSE_BOTTOMHAND);
             }
 
