@@ -78,7 +78,6 @@ public class OmniWheelsDevon extends LinearOpMode {
     
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private ElapsedTime runtime = new LinearTime();
     
     private DcMotor leftFrontWheel = null; //Motors to control all wheels
     private DcMotor leftBackWheel = null;
@@ -281,7 +280,7 @@ public class OmniWheelsDevon extends LinearOpMode {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             if (linearUpGP1 == true || linearUpGP2 == true) {
-                private int stopwatch = time;
+                long stopwatch = time;
                 leftLinearActuator.setPower(1.0);
                 rightLinearActuator.setPower(1.0);
                 
@@ -290,7 +289,7 @@ public class OmniWheelsDevon extends LinearOpMode {
                     rightLinearActuator.setPower(0.0);
                 }
             } else if (linearDownGP1 == true || linearDownGP2 == true) {
-                private int stopwatch = time;
+                long stopwatch = time;
                 leftLinearActuator.setPower(-1.0);
                 rightLinearActuator.setPower(-1.0);
                 
