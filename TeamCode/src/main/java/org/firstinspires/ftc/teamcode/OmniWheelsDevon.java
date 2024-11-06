@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
@@ -77,6 +78,7 @@ public class OmniWheelsDevon extends LinearOpMode {
     
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime runtime = new LinearTime();
     
     private DcMotor leftFrontWheel = null; //Motors to control all wheels
     private DcMotor leftBackWheel = null;
@@ -100,6 +102,8 @@ public class OmniWheelsDevon extends LinearOpMode {
  
     private boolean rotationDirection = true; //clockwise or counterclockwise
 
+    long time=System.currentTimeMillis();
+    
     List<DcMotor> allMotors = new ArrayList<>();
     List<Servo>   allServos = new ArrayList<>();
 
@@ -229,7 +233,9 @@ public class OmniWheelsDevon extends LinearOpMode {
             boolean topHandClose    = gamepad2.x;
             boolean bottomHandOpen  = gamepad2.b;
             boolean bottomHandClose = gamepad2.a;
-            
+
+            boolean bottomArmBaseJointUp   = gamepad2.dpad_up;
+            boolean bottomArmBaseJointDown = gamepad2.dpad_down;
             
             double bothArmSpeed       = gamepad2.left_stick_y;      // Move the Base Joint Forward/Backward
             // double topArmPower        = topArmBaseJoint - topArmMiddleJoint;
@@ -257,8 +263,6 @@ public class OmniWheelsDevon extends LinearOpMode {
             max = Math.max(max, Math.abs(leftBackPower));
             max = Math.max(max, Math.abs(rightBackPower));
             
-            
-            
             if (max > 1.0) {
                 leftFrontPower  /= max;
                 rightFrontPower /= max;
@@ -277,12 +281,24 @@ public class OmniWheelsDevon extends LinearOpMode {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             
             if (linearUpGP1 == true || linearUpGP2 == true) {
+                private int stopwatch = time;
                 leftLinearActuator.setPower(1.0);
                 rightLinearActuator.setPower(1.0);
+                
+                if (time >= stopwatch + 5000) {
+                    leftLinearActuator.setPower(0.0);
+                    rightLinearActuator.setPower(0.0);
+                }
             } else if (linearDownGP1 == true || linearDownGP2 == true) {
+                private int stopwatch = time;
                 leftLinearActuator.setPower(-1.0);
                 rightLinearActuator.setPower(-1.0);
-            }
+                
+                if (time >= stopwatch + 5000) {
+                    leftLinearActuator.setPower(0.0);
+                    rightLinearActuator.setPower(0.0);
+                }
+            } 
         /*
             NOT DOING TARGET POSITION
             if (topArmPresetGrab) {
@@ -316,8 +332,11 @@ public class OmniWheelsDevon extends LinearOpMode {
                 bottomHand.setPosition(CLOSE_BOTTOMHAND);
             }
 
-
-            
+            if (bottomArmBaseJointUp) {
+                bottomArmBaseJoint.setPosition(1.0);
+            } else if (bottomArmBaseJointDown) {
+                bottomArmBaseJoint.setPosition(0.0);
+            }
             
             // MAKE MANUAL CONTROLS FOR TOP ARM HERE =====================================================================================================================================
             // if (gamepad2.left_shoulder) { 
