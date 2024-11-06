@@ -73,8 +73,7 @@ import java.util.ArrayList;
 
 
 @TeleOp(name="OmniWheels 0.2", group="OmniOp")
-@Disabled
-public class OmniWheels extends LinearOpMode {
+public class OmniWheelsDevon extends LinearOpMode {
     
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -95,7 +94,10 @@ public class OmniWheels extends LinearOpMode {
     
     private Servo bottomArmBaseJoint = null; //One more joint, just its a servo
 
+    final double MAX_POS       = 1.0;    // Maximum rotational position
+    final double MIN_POS       = 0.0;    // Minimum rotational position
     private double position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+ 
     private boolean rotationDirection = true; //clockwise or counterclockwise
 
     List<DcMotor> allMotors = new ArrayList<>();
@@ -135,7 +137,7 @@ public class OmniWheels extends LinearOpMode {
 
         allServos.add(topHand);
         allServos.add(bottomHand);
-        allServos.add(bottomBaseJoint);
+        allServos.add(bottomArmBaseJoint);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -183,8 +185,6 @@ public class OmniWheels extends LinearOpMode {
             double handY;
             final double INCREMENT     = 0.01;   // amount to slew servo each CYCLE_MS cycle
             final int    CYCLE_MS      = 50;     // period of each cycle
-            final double MAX_POS       = 1.0;    // Maximum rotational position
-            final double MIN_POS       = 0.0;    // Minimum rotational position
             // All variable numbers from here is guestimations, needs to be actually tested ==============================================================================
             /* 
             final double BOTTOM_BASE_0 = 0.0;    // Furthest back the bottom arm base needs to go
@@ -225,14 +225,14 @@ public class OmniWheels extends LinearOpMode {
             boolean bottomArmPresetRelease = gamepad2.dpad_up; // go in and get in spot for top arm to grab sample
             */
 
-            double topHandOpen     = gamepad2.y;
-            double topHandClose    = gamepad2.x;
-            double bottomHandOpen  = gamepad2.b;
-            double bottomHandClose = gamepad2.a;
+            boolean topHandOpen     = gamepad2.y;
+            boolean topHandClose    = gamepad2.x;
+            boolean bottomHandOpen  = gamepad2.b;
+            boolean bottomHandClose = gamepad2.a;
             
             
             double bothArmSpeed       = gamepad2.left_stick_y;      // Move the Base Joint Forward/Backward
-            double topArmPower      = topArmBase - topArmMiddle;
+            // double topArmPower        = topArmBaseJoint - topArmMiddleJoint;
             
             // On both controllers
             // Not doing pos 0
@@ -257,18 +257,13 @@ public class OmniWheels extends LinearOpMode {
             max = Math.max(max, Math.abs(leftBackPower));
             max = Math.max(max, Math.abs(rightBackPower));
             
-            armMax = Math.max(Math.abs(topArmPower));
-
+            
             
             if (max > 1.0) {
                 leftFrontPower  /= max;
                 rightFrontPower /= max;
                 leftBackPower   /= max;
                 rightBackPower  /= max;
-            }
-
-            if (armMax > 1.0) {
-                topArmPower /= armMax;
             }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -367,7 +362,7 @@ public class OmniWheels extends LinearOpMode {
             // telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             // telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             for (DcMotor thisMotor: allMotors) {
-                telemetry.addData("MotorSpeed", thisMotor.getSpeed());
+                telemetry.addData("MotorSpeed", thisMotor.getPower());
             }
             for (Servo thisServo: allServos) {
                 telemetry.addData("ServoPosition", thisServo.getPosition());
