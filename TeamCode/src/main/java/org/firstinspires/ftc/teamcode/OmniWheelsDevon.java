@@ -73,7 +73,7 @@ import java.util.Scanner;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-@TeleOp(name="OmniWheels 0.2", group="OmniOp")
+@TeleOp(name="OmniWheelsDevon 1.1", group="OmniOp")
 public class OmniWheelsDevon extends LinearOpMode {
     
     // Declare OpMode members.
