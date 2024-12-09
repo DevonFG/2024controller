@@ -69,14 +69,22 @@ public class AutoWithHardware extends LinearOpMode {
 
     // Create a RobotHardware object to be used to access robot hardware.
     // Prefix any hardware functions with "robot." to access this class.
-    RobotHardware   robot       = new RobotHardware(this);
+    RobotHardware robot = new RobotHardware(this); 
 
     @Override
     public void runOpMode() {
-        double drive        = 0;
-        double turn         = 0;
-        double arm          = 0;
-        double handOffset   = 0;
+        double drive        = 0.0;
+        double strafe       = 0.0;
+        double turn         = 0.0;
+
+        // 1 panel is 2000 miliseconds
+        double INCH_TO_TICK = 20.0; // untested
+        double TICK_TO_INCH = 0.05; // untested
+
+        double 
+        
+        // double arm          = 0;
+        // double handOffset   = 0;
 
         // initialize all the hardware, using the hardware class. See how clean and simple this is?
         robot.init();
@@ -87,40 +95,13 @@ public class AutoWithHardware extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
-            // Run wheels in POV mode (note: The joystick goes negative when pushed forward, so negate it)
-            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
-            // This way it's also easy to just drive straight, or just turn.
-            drive = -gamepad1.left_stick_y;
-            turn  =  gamepad1.right_stick_x;
-
-            // Combine drive and turn for blended motion. Use RobotHardware class
-            robot.driveRobot(drive, turn);
-
-            // Use gamepad left & right Bumpers to open and close the claw
-            // Use the SERVO constants defined in RobotHardware class.
-            // Each time around the loop, the servos will move by a small amount.
-            // Limit the total offset to half of the full travel range
-            if (gamepad1.right_bumper)
-                handOffset += robot.HAND_SPEED;
-            else if (gamepad1.left_bumper)
-                handOffset -= robot.HAND_SPEED;
-            handOffset = Range.clip(handOffset, -0.5, 0.5);
-
-            // Move both servos to new position.  Use RobotHardware class
-            robot.setHandPositions(handOffset);
-
-            // Use gamepad buttons to move arm up (Y) and down (A)
-            // Use the MOTOR constants defined in RobotHardware class.
-            if (gamepad1.y)
-                arm = robot.ARM_UP_POWER;
-            else if (gamepad1.a)
-                arm = robot.ARM_DOWN_POWER;
-            else
-                arm = 0;
-
-            robot.setArmPower(arm);
-
+            
+            //robot.driveRobot(drive, strafe, turn)
+            //drive - pos is forward
+            //strafe - pos is right
+            //turn - pos is clockwise
+            //=========================================================PUT CODE (STEP BY STEP) HERE!!!==============
+            
             // Send telemetry messages to explain controls and show robot status
             telemetry.addData("Drive", "Left Stick");
             telemetry.addData("Turn", "Right Stick");
