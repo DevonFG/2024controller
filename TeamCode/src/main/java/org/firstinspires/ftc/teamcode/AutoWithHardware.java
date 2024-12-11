@@ -78,10 +78,11 @@ public class AutoWithHardware extends LinearOpMode {
         double turn         = 0.0;
 
         // 1 panel is 2000 miliseconds
-        double INCH_TO_TICK = 20.0; // untested
+        double PANEL = 2000; //in miliseconds
+        double PANEL_TO_INCH = PANEL / 24; // 24 inches per panel
+        double INCHES = PANEL_TO_INCH;
+        double INCH_TO_TICK = 20.0; // untested, change to PANEL_TO_INCH / ##
         double TICK_TO_INCH = 0.05; // untested
-
-        double 
         
         // double arm          = 0;
         // double handOffset   = 0;
@@ -101,6 +102,74 @@ public class AutoWithHardware extends LinearOpMode {
             //strafe - pos is right
             //turn - pos is clockwise
             //=========================================================PUT CODE (STEP BY STEP) HERE!!!==============
+
+            
+            // Forward .5p
+            robot.driveRobot(1.0,0.0,0.0);
+            sleep(PANEL*.5);
+            nextInstruction();
+            // Left 1p
+            robot.driveRobot(0.0,-1.0,0.0);
+            sleep(PANEL*1);
+            nextInstruction();
+            // Right 1p
+            robot.driveRobot(0.0,1.0,0.0);
+            sleep(PANEL*1)
+            nextInstruction();
+            // Forward 1.5p
+            robot.driveRobot(1.0,0.0,0.0);
+            sleep(PANEL*1.5);
+            nextInstruction();
+            // Left 1p
+            robot.driveRobot(0.0,-1.0,0.0);
+            sleep(PANEL*1);
+            nextInstruction();
+            // 180 Turn
+            robot.driveRobot(0.0,0.0,1.0);
+            sleep(TURN_90*2); // make actual number
+            nextInstruction();
+            //Forward 1.5p
+            robot.driveRobot(1.0,0.0,0.0);
+            sleep(PANEL*1.5);
+            nextInstruction();
+            // On to Grab Sample
+            robot.toggleSweeper(); // on
+            robot.setSweeperPosition(INFRONT_FORWARD); // change to inches
+            sleep(SWEEPER_TIME); // make actual number
+            nextInstruction();
+            // Off to Score Sample
+            robot.setSweeperPosition(FULL_BACKWARD); // change to inches
+            sleep(SWEEPER_TIME); // make actual number
+            robot.toggleSweeper(); // off
+            nextInstruction();
+            // On Screw
+            robot.setScrewPower(1.0); // on, check if turning the correct way, not tested
+            nextInstruction();
+            // Lift and Score
+            robot.standUp(UP_FULL); // change to inches
+            robot.liftScrew(UP_FULL); // change to inches
+            sleep(LIFT_TIME); // make actual number
+            robot.toggleDepositDoor(); // open
+            robot.toggleDepositDoor(); // close
+            robot.setScrewPower(0.0); // off
+            robot.standUp(DOWN_FULL); // change to inches
+            robot.liftScrew(DOWN_FULL); // change to inches
+            sleep(LIFT_TIME); // make actual number
+            nextInstruction();
+            // Turn 90 counter clockwise
+            robot.driveRobot(0.0,0.0,1.0);
+            sleep(TURN_90); // make actual number
+            nextInstruction();
+            // Forward 5p
+            robot.driveRobot(1.0,0.0,0.0);
+            sleep(PANEL*5);
+            nextInstruction();
+            // Right 0.5p
+            robot.driveRobot(0.0,1.0,0.0);
+            sleep(PANEL*.5);
+            nextInstruction();
+
+            
             
             // Send telemetry messages to explain controls and show robot status
             telemetry.addData("Drive", "Left Stick");
@@ -115,8 +184,11 @@ public class AutoWithHardware extends LinearOpMode {
             telemetry.addData("Hand Position",  "Offset = %.2f", handOffset);
             telemetry.update();
 
-            // Pace this loop so hands move at a reasonable speed.
-            sleep(50);
+            
+            public void nextInstruction() {
+                robot.driveRobot(0.0,0.0,0.0);
+                sleep(100);
+            }
         }
     }
 }
