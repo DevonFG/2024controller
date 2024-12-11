@@ -132,7 +132,7 @@ public class RobotHardware {
 
     }
     
-    public void liftScrew(double inches) {
+    public void liftScrew(string inches) {
 
     }
     
