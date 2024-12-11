@@ -121,7 +121,7 @@ public class RobotHardware {
     //     armMotor.setPower(power);
     // }
 
-    public void setSweperPositions(double offset) { 
+    public void setSweeperPositions(double offset) { 
     //This code came from samples
         offset = Range.clip(offset, -0.5, 0.5);
         leftHand.setPosition(MID_SERVO + offset);
