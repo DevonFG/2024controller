@@ -106,71 +106,60 @@ public class AutoWithHardware extends LinearOpMode {
             
             // Forward .5p
             robot.driveRobot(1.0,0.0,0.0);
-            sleep(PANEL*.5);
-            nextInstruction();
+            nextInstruction(PANEL*.5);
             // Left 1p
             robot.driveRobot(0.0,-1.0,0.0);
-            sleep(PANEL*1);
-            nextInstruction();
+            nextInstruction(PANEL*1.0);
             // Right 1p
             robot.driveRobot(0.0,1.0,0.0);
-            sleep(PANEL*1)
-            nextInstruction();
+            nextInstruction(PANEL*1.0);
             // Forward 1.5p
             robot.driveRobot(1.0,0.0,0.0);
-            sleep(PANEL*1.5);
-            nextInstruction();
+            nextInstruction(PANEL*1.5);
             // Left 1p
             robot.driveRobot(0.0,-1.0,0.0);
-            sleep(PANEL*1);
-            nextInstruction();
+            nextInstruction(PANEL*1.0);
             // 180 Turn
             robot.driveRobot(0.0,0.0,1.0);
-            sleep(TURN_90*2); // make actual number
-            nextInstruction();
+            nextInstruction(TURN_90*2); // make actual number
             //Forward 1.5p
             robot.driveRobot(1.0,0.0,0.0);
-            sleep(PANEL*1.5);
-            nextInstruction();
+            nextInstruction(PANEL*1.5);
             // On to Grab Sample
             robot.toggleSweeper(); // on
             robot.setSweeperPosition(INFRONT_FORWARD); // change to inches
             sleep(SWEEPER_TIME); // make actual number
-            nextInstruction();
+            nextInstruction(0.0);
             // Off to Score Sample
             robot.setSweeperPosition(FULL_BACKWARD); // change to inches
             sleep(SWEEPER_TIME); // make actual number
             robot.toggleSweeper(); // off
-            nextInstruction();
+            nextInstruction(0.0);
             // On Screw
             robot.setScrewPower(1.0); // on, check if turning the correct way, not tested
-            nextInstruction();
+            nextInstruction(0.0);
             // Lift and Score
             robot.standUp(UP_FULL); // change to inches
             robot.liftScrew(UP_FULL); // change to inches
-            sleep(LIFT_TIME); // make actual number
+            nextInstruction(LIFT_TIME); // make actual number
             robot.toggleDepositDoor(); // open
             robot.toggleDepositDoor(); // close
             robot.setScrewPower(0.0); // off
             robot.standUp(DOWN_FULL); // change to inches
             robot.liftScrew(DOWN_FULL); // change to inches
-            sleep(LIFT_TIME); // make actual number
-            nextInstruction();
+            nextInstruction(LIFT_TIME); // make actual number
             // Turn 90 counter clockwise
             robot.driveRobot(0.0,0.0,1.0);
-            sleep(TURN_90); // make actual number
-            nextInstruction();
+            nextInstruction(TURN_90); // make actual number
             // Forward 5p
             robot.driveRobot(1.0,0.0,0.0);
-            sleep(PANEL*5);
-            nextInstruction();
+            nextInstruction(PANEL*5.0);
             // Right 0.5p
             robot.driveRobot(0.0,1.0,0.0);
-            sleep(PANEL*.5);
-            nextInstruction();
-
+            nextInstruction(PANEL*.5);
             
             
+            /*
             // Send telemetry messages to explain controls and show robot status
             telemetry.addData("Drive", "Left Stick");
             telemetry.addData("Turn", "Right Stick");
@@ -183,11 +172,13 @@ public class AutoWithHardware extends LinearOpMode {
             telemetry.addData("Arm Power",  "%.2f", arm);
             telemetry.addData("Hand Position",  "Offset = %.2f", handOffset);
             telemetry.update();
-
+            */
             
-            public void nextInstruction() {
+            public void nextInstruction(double delay) {
+                sleep(delay);
                 robot.driveRobot(0.0,0.0,0.0);
                 sleep(100);
+                robot.updateTelemetry();
             }
         }
     }
