@@ -209,25 +209,21 @@ public class RobotHardware {
     public void standUp(string height) {
         // Need to get measurements for how much we need the feet
         // to expand during each of these phases (combine like ones later)
-        if (height == "highBasket") {
+            // max expand is 7.5
             leftLeg.setPower  (___);
             rightLeg.setPower (___);
             sleep(FEET_MOVE_SPEED);
-        } else if (height == "lowBasket") {
+        } else if (height == "LowBasketUp") {
             leftLeg.setPower  (___);
             rightLeg.setPower (___);
             sleep(FEET_MOVE_SPEED);
-        } else if (height == "lowBar") {
+        } else if (height == "RestFromLow") {
             leftLeg.setPower  (___);
             rightLeg.setPower (___);
             sleep(FEET_MOVE_SPEED);
-        } else if (height == "topBar") {
+        } else if (height == "RestFromFull") {
             leftLeg.setPower  (___);
             rightLeg.setPower (___);
-            sleep(FEET_MOVE_SPEED);
-        } else if (height == "none") {
-            leftLeg.setPower  (-1.0);
-            rightLeg.setPower (-1.0);
             sleep(FEET_MOVE_SPEED);
         }
     }
@@ -235,28 +231,23 @@ public class RobotHardware {
     public void liftScrew(string height) {
         // We need measurements for how high we need the screw to go
         // during each of these scenarios (combine like heights later)
-        if (height == "highBasket") {
+        if (height == "FullUp") {
+            // max expand is 7.5
             leftLeg.setPower  (___);
             rightLeg.setPower (___);
             sleep(FEET_MOVE_SPEED);
-        } else if (height == "lowBasket") {
+        } else if (height == "LowBasketUp") {
             leftLeg.setPower  (___);
             rightLeg.setPower (___);
             sleep(FEET_MOVE_SPEED);
-        } else if (height == "lowBar") {
+        } else if (height == "RestFromLow") {
             leftLeg.setPower  (___);
             rightLeg.setPower (___);
             sleep(FEET_MOVE_SPEED);
-        } else if (height == "topBar") {
+        } else if (height == "RestFromFull") {
             leftLeg.setPower  (___);
             rightLeg.setPower (___);
             sleep(FEET_MOVE_SPEED);
-        } else if (height == "none") {
-            leftLeg.setPower  (-1.0);
-            rightLeg.setPower (-1.0);
-            sleep(FEET_MOVE_SPEED);
-        }
-            
     }
     
     public void setScrewPower(double spin) {
@@ -281,6 +272,7 @@ public class RobotHardware {
         for (Servo   thisServo: allServos) {
             telemetry.addData("ServoPosition", thisServo.getPosition());
         }
+        telemetry.addData(runtime);
         telemetry.update();
     }
 
