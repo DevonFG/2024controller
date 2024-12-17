@@ -78,11 +78,11 @@ public class AutoWithHardware extends LinearOpMode {
         double turn         = 0.0;
 
         // 1 panel is 2000 miliseconds
-        double PANEL = 2000; //in miliseconds
-        double PANEL_TO_INCH = PANEL / 24; // 24 inches per panel
-        double INCHES = PANEL_TO_INCH;
-        double INCH_TO_TICK = 20.0; // untested, change to PANEL_TO_INCH / ##
-        double TICK_TO_INCH = 0.05; // untested
+        double PANEL = robot.staticvar("PANEL");
+        // double PANEL_TO_INCH = PANEL / 24; // 24 inches per panel
+        double INCHES = robot.staticvar("INCHES");
+        // double INCH_TO_TICK = 20.0; // untested, change to PANEL_TO_INCH / ##
+        // double TICK_TO_INCH = 0.05; // untested
         
         // double arm          = 0;
         // double handOffset   = 0;
@@ -126,12 +126,12 @@ public class AutoWithHardware extends LinearOpMode {
             robot.driveRobot(1.0,0.0,0.0);
             nextInstruction(PANEL*1.5);
             // On to Grab Sample
-            robot.toggleSweeper(); // on
-            robot.setSweeperPosition(INFRONT_FORWARD); // change to inches
+            robot.toggleSweeper("on"); // on
+            robot.setSweeperPosition("FullForward"); // not made in hardware yet
             sleep(SWEEPER_TIME); // make actual number
             nextInstruction(0.0);
             // Off to Score Sample
-            robot.setSweeperPosition(FULL_BACKWARD); // change to inches
+            robot.setSweeperPosition("FullBackward"); // not made in hardware yet
             sleep(SWEEPER_TIME); // make actual number
             robot.toggleSweeper(); // off
             nextInstruction(0.0);
@@ -139,14 +139,14 @@ public class AutoWithHardware extends LinearOpMode {
             robot.setScrewPower(1.0); // on, check if turning the correct way, not tested
             nextInstruction(0.0);
             // Lift and Score
-            robot.standUp(UP_FULL); // change to inches
-            robot.liftScrew(UP_FULL); // change to inches
+            robot.standUp("FullUp"); // untested
+            robot.liftScrew("FullUp"); // untested
             nextInstruction(LIFT_TIME); // make actual number
-            robot.toggleDepositDoor(); // open
-            robot.toggleDepositDoor(); // close
+            robot.toggleDepositDoor("open"); // untested
+            robot.toggleDepositDoor("close"); // untested
             robot.setScrewPower(0.0); // off
-            robot.standUp(DOWN_FULL); // change to inches
-            robot.liftScrew(DOWN_FULL); // change to inches
+            robot.standUp("Rest"); // untested
+            robot.liftScrew("Rest"); // untested
             nextInstruction(LIFT_TIME); // make actual number
             // Turn 90 counter clockwise
             robot.driveRobot(0.0,0.0,1.0);
