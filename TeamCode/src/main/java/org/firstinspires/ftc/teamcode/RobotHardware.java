@@ -271,7 +271,7 @@ public class RobotHardware {
         }
     }
     
-     public void telemetryUpdate() {
+    public void telemetryUpdate() {
         for (DcMotor thisMotor: allMotors) {
             telemetry.addData("MotorSpeed", thisMotor.getPower());
         }
@@ -282,6 +282,17 @@ public class RobotHardware {
             telemetry.addData("ServoPosition", thisServo.getPosition());
         }
         telemetry.update();
+    }
+
+    public void staticvar(string wantedVar) {
+        if (wantedVar == "PANEL") {
+            return PANEL;
+        } else if (wantedVar == "INCHES") {
+            return INCH;
+        } else {
+            telemetry.addData("Couldn't get that variable's data from the hardware");
+            telemetry.update();
+        }
     }
     
 }
